@@ -13,7 +13,6 @@ import subprocess
 import shlex
 import pdb
 import string
-from collections import OrderedDict
 
 class testClassAttributes(unittest.TestCase):
     def setUp(self):

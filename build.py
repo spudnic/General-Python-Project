@@ -117,20 +117,24 @@ def install_modules(tmpdir = "", dep_return = "", testfile = "testutils.py", nos
     module = os.path.abspath( os.path.join(current_dir,"utils") )
     
     testfilepy = os.path.abspath( os.path.join(module, "tests", testfile) )
-    
+    if not os.path.exists(testfilepy):
+        log("Error: test file (%s) does not exist" %(testfilepy))
+        return 1
+
+
     os.chdir(module)
     install_cmd = "%s setup.py install" %(cmd)
     try:
         ret = subprocess.call( install_cmd.split( " " ) )
     except:
-        log("\n\nError:Was not able to install cpfutils python module\n\n")
+        log("\n\nError:  Was not able to install python module\n\n")
     os.chdir(current_dir)
 
     if sys.platform.startswith('win32'):
         unit_cmd = "%s -v --exe %s" %(os.path.join(tmpdir, targetDir, "nosetests"), module )
     else:
         if nose:
-            log("\n\nRunning cpfutils tests\n\n")
+            log("\n\nRunning unit tests\n\n")
             #clean up old code coverage
             cmd = "rm -rvf %s" %(nose_coverage_html)
             subprocess.call(cmd.split(" "))
@@ -142,10 +146,6 @@ def install_modules(tmpdir = "", dep_return = "", testfile = "testutils.py", nos
             unit_cmd = "%s -v --cover-html --cover-html-dir=%s --cover-package=utils --cover-tests --with-coverage --cover-erase --exe %s" \
                             %( os.path.join( tmpdir, targetDir, "nosetests" ), nose_coverage_html, testfilepy )
         else:   
-            #log("\n\nRunning specific test\n\n")
-            #this runs only a single testfile that we specified with code coverage
-            #unit_cmd = "%s -v --cover-package=cpfutils --cover-tests --with-coverage --cover-erase --exe %s" %(os.path.join(tmpdir, targetDir, "nosetests"), testfilepy 
-            
             log("\n\nExecuting (%s) via python virtualenv\n\n" %(testfilepy) )
             #this runs only a single testfile that we specified via python so no unit testsing stuff stats
             unit_cmd = "%s %s" %(os.path.join(tmpdir, targetDir, "python"), testfilepy )
@@ -183,9 +183,6 @@ def main():
     #builds up command line arguments
     parser = argparse.ArgumentParser(description='Command line options')
     parser.add_argument('--unit', '-b', dest='pythonUnit', action = 'store_true', help=bHelp)
-    #TODO add the ability to pass in arguments to phpunit
-    #parser.add_argument('phpunit_args', metavar = 'N', nargs = '+', help='Strings to pass to phpunit')
-    #parser.add_argument('--phpUnitArgs', dest='phpunit_args', action = 'append', help='Run phpunit tests')
     
     #parse command line options
     args = parser.parse_args()
@@ -201,8 +198,8 @@ def main():
         tmpdir = createvirtualenv()
         #install dependancies and return deps that could not be installed
         dep_return = install_deps(tmpdir = tmpdir)
-        #installs the cpf modules and runs the unit tests
-        ret = ret + install_modules(tmpdir = tmpdir, dep_return = dep_return, testfile = "testutils.py", nose = True)
+        #installs the python modules and runs the unit tests
+        ret = ret + install_modules(tmpdir = tmpdir, dep_return = dep_return, testfile = "testjbutils.py", nose = True)
         #clear out the temporary virtualenv
         log("\n\ncleaning up by removing dir (%s)\n\n" %(tmpdir) )
         subprocess.call(shlex.split("rm -rf %s" %(tmpdir)))

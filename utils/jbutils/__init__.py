@@ -9,9 +9,6 @@ import os
 import sys
 import subprocess
 import time
-import csv
-import string
-from collections import OrderedDict
 
 #3rd party python specific
 
