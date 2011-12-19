@@ -94,12 +94,6 @@ def install_modules(tmpdir = "", dep_return = "", testfile = "testutils.py", nos
     ret = 0
     current_dir = os.path.abspath( os.path.curdir )
     
-    #case for running from with in jenkins
-    if 'jenkins' in current_dir:
-        log("Error: Command line options not yet implemented!")
-        return 1
-    
-
     targetDir = ""
     if sys.platform.startswith('win32'):
         targetDir = "Scripts"
