@@ -36,9 +36,10 @@ def checkvirtualenv():
     """
     try:
         import virtualenv
-    except:
-        log("Error: virtualenv python module not found, please download from http://pypi.python.org/pypi/virtualenv and install with python setup.py install")
-        sys.exit(1)
+    except ImportError:
+        log("Warning: virtualenv python module not found, installing with pip")
+        cmd = "pip install virtualenv"
+        subprocess.call( cmd.split( " " ) )
         
 def createvirtualenv():
     """
@@ -79,7 +80,7 @@ def install_deps(tmpdir = ""):
     else:
         targetDir = "bin"
         cmd = "%s pymongo coverage nose" %( os.path.join(tmpdir, targetDir, "easy_install") )
-    log( "Installing coverage nose and selenium into a virtualenv.")
+    log( "Installing coverage and nose into a virtualenv.")
     log( cmd )
     subprocess.call( cmd.split( " " ) )
 
