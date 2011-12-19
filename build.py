@@ -79,7 +79,7 @@ def install_deps(tmpdir = ""):
         cmd = "%s pymongo nose" %( os.path.join(tmpdir, targetDir, "easy_install") )
     else:
         targetDir = "bin"
-        cmd = "%s pymongo coverage nose" %( os.path.join(tmpdir, targetDir, "easy_install") )
+        cmd = "%s coverage nose" %( os.path.join(tmpdir, targetDir, "easy_install") )
     log( "Installing coverage and nose into a virtualenv.")
     log( cmd )
     subprocess.call( cmd.split( " " ) )
@@ -138,8 +138,8 @@ def install_modules(tmpdir = "", dep_return = "", testfile = "testutils.py", nos
             subprocess.call(cmd.split(" "))
 
             #this running through all tests in the tests directory
-            unit_cmd = "%s -v --cover-html --cover-html-dir=%s --cover-package=utils --cover-tests --with-coverage --cover-erase --exe %s" \
-                            %( os.path.join( tmpdir, targetDir, "nosetests" ), nose_coverage_html, testfilepy )
+            unit_cmd = "%s -v --cover-package=jbutils --cover-tests --with-coverage --cover-erase --exe %s" \
+                            %( os.path.join( tmpdir, targetDir, "nosetests" ), testfilepy )
         else:   
             log("\n\nExecuting (%s) via python virtualenv\n\n" %(testfilepy) )
             #this runs only a single testfile that we specified via python so no unit testsing stuff stats
