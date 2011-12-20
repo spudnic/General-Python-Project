@@ -12,6 +12,7 @@ import sys
 import os
 
 from distutils.core import setup
+from distutils.core import Command
 #from distutils.command.install_data import install_data
 #from distutils.command.sdist import sdist
 
@@ -22,6 +23,17 @@ scripts = [os.path.join( "bin","%srun"     %(name) ), \
 long_description="""
 This modules is a sample of test driven development.
 """
+
+class PyTest(Command):
+    user_options = []
+    def initialize_options(self):
+        pass
+    def finalize_options(self):
+        pass
+    def run(self):
+        import sys,subprocess
+        errno = subprocess.call([sys.executable, os.path.join('tests','testjbutils.py')])
+        raise SystemExit(errno)
 
 setup_args = {
     'name': name,
@@ -51,5 +63,5 @@ if sys.platform == "win32":
     setup_args['zip_safe'] = False
 
 
-setup(**setup_args)
+setup(  cmdclass = {'test': PyTest},**setup_args)
 
