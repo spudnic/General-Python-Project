@@ -135,7 +135,7 @@ def install_modules(tmpdir = "", dep_return = "", testfile = "testutils.py", nos
             subprocess.call(cmd.split(" "))
 
             #this running through all tests in the tests directory
-            unit_cmd = "%s -v --cover-package=jbutils --cover-tests --with-coverage --cover-erase --exe %s" \
+            unit_cmd = "%s -v --cover-package=jbutils --cover-tests --with-coverage --cover-erase --with-xunit --exe %s" \
                             %( os.path.join( tmpdir, targetDir, "nosetests" ), testfilepy )
         else:   
             log("\n\nExecuting (%s) via python virtualenv\n\n" %(testfilepy) )
