@@ -23,7 +23,10 @@ class testClassAttributes(unittest.TestCase):
             import jbutils
         except:
             print "Error: not able to import jbutils make sure that the module in installed correctly"
-
+    def test_main(self):
+        import jbutils
+        jbutils.main()
+    
     def tearDown(self):
         """
         cleanup 
