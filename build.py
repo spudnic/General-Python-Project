@@ -23,7 +23,7 @@ def log(message = "", debug = 1):
     if debug == 1:
         sys.stderr.flush()
         sys.stdout.flush()
-        print message
+        print(message)
         sys.stderr.flush()
         sys.stdout.flush()
     else:
@@ -56,30 +56,26 @@ def createvirtualenv():
 
 def install_deps(tmpdir = ""):
     """
-    installs nose coverage selenium pymongo
+    installs dependances
     requires an internet connection
     TODO: if already installed skip
     TODO: return a list of dependancies that failed to install
     """
-    ret = ""
+    ret = 0
     """
     try:
         import nose
         import coverage
-        import selenium
-        import mongo
     except:    
     """
-    #TODO migrate to pip instead of easy_install
-    # Set the location of easy_install based on platform
     targetDir = ""
     cmd = ""
     if sys.platform.startswith('win32'):
         targetDir = "Scripts"
-        cmd = "%s pymongo nose" %( os.path.join(tmpdir, targetDir, "easy_install") )
+        cmd = "%s install pymongo nose" %( os.path.join(tmpdir, targetDir, "pip") )
     else:
         targetDir = "bin"
-        cmd = "%s coverage nose" %( os.path.join(tmpdir, targetDir, "easy_install") )
+        cmd = "%s install coverage nose" %( os.path.join(tmpdir, targetDir, "pip") )
     log( "Installing coverage and nose into a virtualenv.")
     log( cmd )
     subprocess.call( cmd.split( " " ) )
@@ -131,8 +127,9 @@ def install_modules(tmpdir = "", dep_return = "", testfile = "testutils.py", nos
         if nose:
             log("\n\nRunning unit tests\n\n")
             #clean up old code coverage
-            cmd = "rm -rvf %s" %(nose_coverage_html)
-            subprocess.call(cmd.split(" "))
+            if os.path.exists(nose_coverage_html):
+                cmd = "rm -rvf %s" %(nose_coverage_html)
+                subprocess.call(cmd.split(" "))
             #create directory
             cmd = "mkdir -p %s" %(nose_coverage_html)
             subprocess.call(cmd.split(" "))
@@ -172,9 +169,9 @@ def main():
     """
     ret = 0
     runpythonunit = False
+    bHelp = 'unit test python utils module'
 
     phpunit_args = ""
-    bHelp = 'unit test python utils module'
     #builds up command line arguments
     parser = argparse.ArgumentParser(description='Command line options')
     parser.add_argument('--unit', '-b', dest='pythonUnit', action = 'store_true', help=bHelp)
