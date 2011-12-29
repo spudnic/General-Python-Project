@@ -54,7 +54,7 @@ def createvirtualenv():
     subprocess.call( vcmd.split(" ") )
     return tmpdir
 
-def install_deps(tmpdir = ""):
+def install_deps(tmpdir = "", test = False):
     """
     installs dependances
     requires an internet connection
@@ -78,11 +78,12 @@ def install_deps(tmpdir = ""):
         cmd = "%s install coverage nose" %( os.path.join(tmpdir, targetDir, "pip") )
     log( "Installing coverage and nose into a virtualenv.")
     log( cmd )
-    subprocess.call( cmd.split( " " ) )
+    if not test:
+        ret = subprocess.call( cmd.split( " " ) )
 
     return ret
 
-def install_modules(tmpdir = "", dep_return = "", testfile = "testutils.py", nose = False, nose_coverage_html = "/tmp/pythonUnitCoverage"):
+def install_modules(test = False, tmpdir = "", dep_return = "", testfile = "testjbutils.py", nose = False, nose_coverage_html = "/tmp/pythonUnitCoverage"):
     """
     installs cpf python modules into virtualenv
     runs unit tests
@@ -112,14 +113,17 @@ def install_modules(tmpdir = "", dep_return = "", testfile = "testutils.py", nos
         log("Error: test file (%s) does not exist" %(testfilepy))
         return 1
 
-
-    os.chdir(module)
+    
     install_cmd = "%s setup.py install" %(cmd)
-    try:
-        ret = subprocess.call( install_cmd.split( " " ) )
-    except:
-        log("\n\nError:  Was not able to install python module\n\n")
-    os.chdir(current_dir)
+    if test:
+        log("\n\n %s \n\n" %(install_cmd) )
+    else:
+        os.chdir(module)
+        try:
+            ret = subprocess.call( install_cmd.split( " " ) )
+        except:
+            log("\n\nError:  Was not able to install python module\n\n")
+        os.chdir(current_dir)
 
     if sys.platform.startswith('win32'):
         unit_cmd = "%s -v --exe %s" %(os.path.join(tmpdir, targetDir, "nosetests"), module )
@@ -132,9 +136,12 @@ def install_modules(tmpdir = "", dep_return = "", testfile = "testutils.py", nos
                 subprocess.call(cmd.split(" "))
             #create directory
             cmd = "mkdir -p %s" %(nose_coverage_html)
-            subprocess.call(cmd.split(" "))
+            if test:
+                log("\n\n %s \n\nz" %(cmd) )
+            else:
+                subprocess.call(cmd.split(" "))
 
-            #this running through all tests in the tests directory
+            #running through all tests in the tests directory
             unit_cmd = "%s -v --cover-package=jbutils --cover-tests --with-coverage --cover-erase --with-xunit --exe %s" \
                             %( os.path.join( tmpdir, targetDir, "nosetests" ), testfilepy )
         else:   
@@ -143,20 +150,23 @@ def install_modules(tmpdir = "", dep_return = "", testfile = "testutils.py", nos
             unit_cmd = "%s %s" %(os.path.join(tmpdir, targetDir, "python"), testfilepy )
         
     #TODO fix as this is kind of hacky
-    os.chdir(module)
-    try:
-        log( unit_cmd + "\n\n" ) 
-        ret = subprocess.call( unit_cmd.split( " " ) )
-        #if python unit testing show coverage report
-        #if nose:
-        #    cmd = "open %s/index.html" %(nose_coverage_html)
-        #    subprocess.Popen( cmd.split(" "), stdout = subprocess.PIPE, stderr = subprocess.PIPE)
-            
-    except:
-        log("Error:Unit tests for %s had problems\n\n" %(module) )
-    #TODO fix as this is kind of hacky
-    os.chdir(current_dir)
-    
+    if test:
+        log("\n\n %s \n\n" %(unit_cmd) )
+    else:
+        os.chdir(module)
+        try:
+            log( unit_cmd + "\n\n" ) 
+            ret = subprocess.call( unit_cmd.split( " " ) )
+            #if python unit testing show coverage report
+            #if nose:
+            #    cmd = "open %s/index.html" %(nose_coverage_html)
+            #    subprocess.Popen( cmd.split(" "), stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+                
+        except:
+            log("Error:Unit tests for %s had problems\n\n" %(module) )
+        #TODO fix as this is kind of hacky
+        os.chdir(current_dir)
+        
     #clean up
     del module
     del install_cmd
