@@ -2,9 +2,9 @@
 
 #---------------------
 #@author info@jbbs-inc.com
-#command line runner for utils python module
+#command line runner for jbutils python module
 #---------------------
 
-import utils
+import jbutils
 
-utils.main()
+jbutils.main()
