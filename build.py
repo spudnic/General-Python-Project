@@ -143,7 +143,8 @@ def run_test(test = False, tmpdir = "", dep_return = "", testfile = "testjbutils
         targetDir = "bin"
     
 
-    testfilepy = os.path.abspath( os.path.join(module, "tests", testfile) )
+    #testfilepy = os.path.abspath( os.path.join(module, "tests", testfile) )
+    testfilepy = os.path.abspath( os.path.join(module, "tests") )
     if not os.path.exists(testfilepy):
         log("Error: test file (%s) does not exist" %(testfilepy))
         return 1
@@ -219,10 +220,8 @@ def main():
     ret = 0
     runpythonunit = False
     runpythonunitfast = False
-    runpythonunitnonetwork = False
     bHelp = 'Full test'
-    fHelp = 'Full tests, less network connection'
-    nHelp = 'Full tests, no network connection'
+    fHelp = 'Full tests, no network connection'
     des = "Command Line Options"
     phpunit_args = ""
     #builds up command line arguments
@@ -231,7 +230,6 @@ def main():
         parser = ArgumentParser(description = des)
         parser.add_argument('--unit', '-b', dest='u', action = 'store_true', help=bHelp)
         parser.add_argument('--unit-fast', '-f', dest='f', action = 'store_true', help=fHelp)
-        parser.add_argument('--unit-no-network', '-n', dest='n', action = 'store_true', help=nHelp)
         args = parser.parse_args()
         
     except ImportError: #Must be python 2.6 or lower
@@ -239,7 +237,6 @@ def main():
         parser = OptionParser(description = des)
         parser.add_option('--unit', '-b', dest='u', action = 'store_true', help=bHelp)
         parser.add_option('--unit-fast', '-f', dest='f', action = 'store_true', help=fHelp)
-        parser.add_option('--unit-no-network', '-n', dest='n', action = 'store_true', help=nHelp)
         args, blank  = parser.parse_args()
        
     #parse command line options
@@ -247,8 +244,6 @@ def main():
         runpythonunit = True
     if args.f:
         runpythonunitfast = True
-    if args.n: 
-        runpythonunitnonetwork = True
     
     if len(sys.argv) < 2:
         parser.print_help()
