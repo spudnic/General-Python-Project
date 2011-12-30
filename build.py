@@ -82,6 +82,12 @@ def install_deps(tmpdir = "", test = False):
         ret = subprocess.call( cmd.split( " " ) )
 
     return ret
+def getTargetDir():
+    if sys.platform.startswith('win32'):
+        targetDir = "Scripts"
+    else:
+        targetDir = "bin"
+    return targetDir
 
 def install_modules(test = False, tmpdir = "", dep_return = "", testfile = "testjbutils.py", nose = False, nose_coverage_html = "/tmp/pythonUnitCoverage"):
     """
@@ -91,11 +97,7 @@ def install_modules(test = False, tmpdir = "", dep_return = "", testfile = "test
     ret = 0
     current_dir = os.path.abspath( os.path.curdir )
     module = os.path.abspath( os.path.join(current_dir, "utils") )
-    targetDir = ""
-    if sys.platform.startswith('win32'):
-        targetDir = "Scripts"
-    else:
-        targetDir = "bin"
+    targetDir = getTargetDir()
     
     cmd = os.path.join(tmpdir, targetDir, "python")
     bundle_cmd = os.path.join(tmpdir, targetDir, "pip")
@@ -114,7 +116,7 @@ def install_modules(test = False, tmpdir = "", dep_return = "", testfile = "test
     
     #install the bundle
     install_cmd = os.path.join(tmpdir, targetDir, "pip")
-    install_cmd = install_cmd + " install jbutils.pybundle"
+    install_cmd = install_cmd + " install jbutils.pybundle --upgrade"
     if test:
         log("\n\n %s \n\n" %(install_cmd) )
     else:
@@ -193,6 +195,24 @@ def run_test(test = False, tmpdir = "", dep_return = "", testfile = "testjbutils
         
     return ret
 
+def get_python():
+    """
+    locates the current installation of python virtual env
+    """
+    #TODO make this more robust
+    python = os.environ["VIRTUAL_ENV"]
+    return python
+
+def remove_module(tmpdir = "", module = ""):
+    ret = 0
+    #the location of the python module
+    current_dir = os.path.abspath( os.path.curdir )
+    targetDir = getTargetDir()
+    remove_cmd = os.path.join(tmpdir, targetDir, "pip")
+    remove_cmd += " uninstall %s" %(module)
+    log("\n\n%s\n\n" %(remove_cmd) )
+    ret = subprocess.call(remove_cmd.split(' ') )
+    return ret
     
 def main():
     """
@@ -224,6 +244,13 @@ def main():
     
     if len(sys.argv) < 2:
         parser.print_help()
+    
+    if runpythonunitfast == True:
+        #get the location of current virtualenv
+        local_python = get_python()
+        #install dependancies and return deps that could not be installed
+        ret = install_modules(tmpdir = local_python, nose = True)
+        remove_module(tmpdir = local_python, module = 'jbutils')
     
     if runpythonunit == True:
         log("\n\n%s\n\n" %( bHelp ) )
