@@ -34,7 +34,7 @@ class testClassAttributes(unittest.TestCase):
         '''
         import jbutils
         old_args = sys.argv
-        sys.argv = ['--test-env']
+        sys.argv = ['jbutilsrun','--test-env']
         jbutils.main()
         sys.argv = old_args
     
