@@ -11,12 +11,10 @@ import os
 import sys
 import pdb
 import time
-#python 2.7 specific
-import argparse
 
 #python 3rd party
 
-#cpf specific
+#internal
 
 
 def log(message = "", debug = 1):
@@ -213,7 +211,7 @@ def remove_module(tmpdir = "", module = ""):
     log("\n\n%s\n\n" %(remove_cmd) )
     ret = subprocess.call(remove_cmd.split(' ') )
     return ret
-    
+
 def main():
     """
     main method that calls into all other methods
@@ -225,16 +223,26 @@ def main():
     bHelp = 'Full test'
     fHelp = 'Full tests, less network connection'
     nHelp = 'Full tests, no network connection'
-
+    des = "Command Line Options"
     phpunit_args = ""
     #builds up command line arguments
-    parser = argparse.ArgumentParser(description='Command line options')
-    parser.add_argument('--unit', '-b', dest='u', action = 'store_true', help=bHelp)
-    parser.add_argument('--unit-fast', '-f', dest='f', action = 'store_true', help=fHelp)
-    parser.add_argument('--unit-no-network', '-n', dest='n', action = 'store_true', help=nHelp)
-    
+    try:
+        from argparse import ArgumentParser
+        parser = ArgumentParser(description = des)
+        parser.add_argument('--unit', '-b', dest='u', action = 'store_true', help=bHelp)
+        parser.add_argument('--unit-fast', '-f', dest='f', action = 'store_true', help=fHelp)
+        parser.add_argument('--unit-no-network', '-n', dest='n', action = 'store_true', help=nHelp)
+        args = parser.parse_args()
+        
+    except ImportError: #Must be python 2.6 or lower
+        from optparse import OptionParser
+        parser = OptionParser(description = des)
+        parser.add_option('--unit', '-b', dest='u', action = 'store_true', help=bHelp)
+        parser.add_option('--unit-fast', '-f', dest='f', action = 'store_true', help=fHelp)
+        parser.add_option('--unit-no-network', '-n', dest='n', action = 'store_true', help=nHelp)
+        args, blank  = parser.parse_args()
+       
     #parse command line options
-    args = parser.parse_args()
     if args.u:
         runpythonunit = True
     if args.f:
