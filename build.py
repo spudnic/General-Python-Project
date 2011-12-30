@@ -109,7 +109,7 @@ def install_modules(test = False, tmpdir = "", dep_return = "", nose = False, no
         try:
             ret = subprocess.call( bundle_cmd.split( " " ) )
         except:
-            log("\n\nError:  Was not able to pip bundle python module\n\n")
+            log("Error: Was not able to pip bundle python module")
         os.chdir(current_dir)
     
     #install the bundle
@@ -122,7 +122,7 @@ def install_modules(test = False, tmpdir = "", dep_return = "", nose = False, no
         try:
             ret = subprocess.call( install_cmd.split( " " ) )
         except:
-            log("\n\nError:  Was not able to pip install python module\n\n")
+            log("Error: Was not able to pip install python module")
         os.chdir(current_dir)
 
     if not ret == 0:
@@ -141,13 +141,11 @@ def run_test(test = False, tmpdir = "", dep_return = "", nose = False, nose_cove
         targetDir = "Scripts"
     else:
         targetDir = "bin"
-    
 
     testfilepy = os.path.abspath( os.path.join(module, "tests") )
     if not os.path.exists(testfilepy):
         log("Error: tests dir (%s) does not exist" %(testfilepy))
         return 1
-
     
     if sys.platform.startswith('win32'):
         unit_cmd = "%s -v --exe %s" %(os.path.join(tmpdir, targetDir, "nosetests"), module )
@@ -156,8 +154,11 @@ def run_test(test = False, tmpdir = "", dep_return = "", nose = False, nose_cove
             log("\n\nRunning unit tests\n\n")
             #clean up old code coverage
             if os.path.exists(nose_coverage_html):
-                cmd = "rm -rvf %s" %(nose_coverage_html)
-                subprocess.call(cmd.split(" "))
+                cmd = "rm -rf %s" %(nose_coverage_html)
+                if test:
+                    log("\n\n %s \n\nz" %(cmd) )
+                else:
+                    subprocess.call(cmd.split(" "))
             #create directory
             cmd = "mkdir -p %s" %(nose_coverage_html)
             if test:
@@ -169,8 +170,6 @@ def run_test(test = False, tmpdir = "", dep_return = "", nose = False, nose_cove
             unit_cmd = "%s -v --cover-package=jbutils --cover-tests --with-coverage --cover-erase --with-xunit --exe %s" \
                             %( os.path.join( tmpdir, targetDir, "nosetests" ), testfilepy )
         else:   
-            log("\n\nExecuting (%s) via python virtualenv\n\n" %(testfilepy) )
-            #this runs only a single testfile that we specified via python so no unit testsing stuff stats
             unit_cmd = "%s %s" %(os.path.join(tmpdir, targetDir, "python"), testfilepy )
         
     #TODO fix as this is kind of hacky
@@ -187,7 +186,7 @@ def run_test(test = False, tmpdir = "", dep_return = "", nose = False, nose_cove
             #    subprocess.Popen( cmd.split(" "), stdout = subprocess.PIPE, stderr = subprocess.PIPE)
                 
         except:
-            log("Error:Unit tests for %s had problems\n\n" %(module) )
+            log("Error: Unit tests at (%s) had problems" %(testfilepy) )
         #TODO fix as this is kind of hacky
         os.chdir(current_dir)
         
@@ -198,7 +197,11 @@ def get_python():
     locates the current installation of python virtual env
     """
     #TODO make this more robust
-    python = os.environ["VIRTUAL_ENV"]
+    try:
+        python = os.environ["VIRTUAL_ENV"]
+    except KeyError:
+        log("Warning: Not running in local virtualenv.")
+        python = " "
     return python
 
 def remove_module(tmpdir = "", module = ""):
@@ -250,8 +253,12 @@ def main():
     if runpythonunitfast == True:
         #get the location of current virtualenv
         local_python = get_python()
+        if not os.path.exists( local_python ):
+            log("Error: virtualenv at (%s) does not exists." %(local_python) )
+            runpythonunit =  False
+            ret += 1
         #install dependancies and return deps that could not be installed
-        ret = install_modules(tmpdir = local_python, nose = True)
+        ret += install_modules(tmpdir = local_python, nose = True)
         remove_module(tmpdir = local_python, module = 'jbutils')
     
     if runpythonunit == True:
