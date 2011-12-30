@@ -98,23 +98,23 @@ def install_modules(test = False, tmpdir = "", dep_return = "", testfile = "test
         targetDir = "bin"
     
     cmd = os.path.join(tmpdir, targetDir, "python")
+    bundle_cmd = os.path.join(tmpdir, targetDir, "pip")
     
-    #catches the case for using the native python and not a virualenv 
-    #if tmpdir == "":
-    #    cmd = "python"
+    #make the bundle
+    bundle_cmd = bundle_cmd + " bundle jbutils.pybundle ."
+    if test:
+        log("\n\n %s \n\n" %(bundle_cmd) )
+    else:
+        os.chdir(module)
+        try:
+            ret = subprocess.call( bundle_cmd.split( " " ) )
+        except:
+            log("\n\nError:  Was not able to pip bundle python module\n\n")
+        os.chdir(current_dir)
     
-    install_cmd = "%s setup.py install" %(cmd)
-   
-    #the location of the python module
-    module = os.path.abspath( os.path.join(current_dir,"utils") )
-    
-    testfilepy = os.path.abspath( os.path.join(module, "tests", testfile) )
-    if not os.path.exists(testfilepy):
-        log("Error: test file (%s) does not exist" %(testfilepy))
-        return 1
-
-    
-    install_cmd = "%s setup.py install" %(cmd)
+    #install the bundle
+    install_cmd = os.path.join(tmpdir, targetDir, "pip")
+    install_cmd = install_cmd + " install jbutils.pybundle"
     if test:
         log("\n\n %s \n\n" %(install_cmd) )
     else:
@@ -122,9 +122,33 @@ def install_modules(test = False, tmpdir = "", dep_return = "", testfile = "test
         try:
             ret = subprocess.call( install_cmd.split( " " ) )
         except:
-            log("\n\nError:  Was not able to install python module\n\n")
+            log("\n\nError:  Was not able to pip install python module\n\n")
         os.chdir(current_dir)
 
+    if not ret == 0:
+        return ret 
+    else: 
+        ret = run_test(test = test, tmpdir = tmpdir, dep_return = dep_return, testfile = testfile, nose = nose, nose_coverage_html = nose_coverage_html)
+    return ret
+
+def run_test(test = False, tmpdir = "", dep_return = "", testfile = "testjbutils.py", nose = False, nose_coverage_html = "/tmp/pythonUnitCoverage"):
+    ret = 0
+    #the location of the python module
+    current_dir = os.path.abspath( os.path.curdir )
+    module = os.path.abspath( os.path.join(current_dir, "utils") )
+    targetDir = ""
+    if sys.platform.startswith('win32'):
+        targetDir = "Scripts"
+    else:
+        targetDir = "bin"
+    
+
+    testfilepy = os.path.abspath( os.path.join(module, "tests", testfile) )
+    if not os.path.exists(testfilepy):
+        log("Error: test file (%s) does not exist" %(testfilepy))
+        return 1
+
+    
     if sys.platform.startswith('win32'):
         unit_cmd = "%s -v --exe %s" %(os.path.join(tmpdir, targetDir, "nosetests"), module )
     else:
@@ -167,9 +191,6 @@ def install_modules(test = False, tmpdir = "", dep_return = "", testfile = "test
         #TODO fix as this is kind of hacky
         os.chdir(current_dir)
         
-    #clean up
-    del module
-    del install_cmd
     return ret
 
     

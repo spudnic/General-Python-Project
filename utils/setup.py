@@ -10,7 +10,7 @@ Standard setup script.
 
 import sys
 import os
-
+import pdb
 from distutils.core import setup
 from distutils.core import Command
 #from distutils.command.install_data import install_data
@@ -34,6 +34,8 @@ class PyTest(Command):
         import sys,subprocess
         errno = subprocess.call([sys.executable, os.path.join('tests','testjbutils.py')])
         raise SystemExit(errno)
+
+
 
 setup_args = {
     'name': name,
@@ -61,7 +63,6 @@ setup_args = {
 # into directories, which seems to work better --
 if sys.platform == "win32":
     setup_args['zip_safe'] = False
-
 
 setup(  cmdclass = {'test': PyTest},**setup_args)
 
