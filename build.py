@@ -87,7 +87,7 @@ def getTargetDir():
         targetDir = "bin"
     return targetDir
 
-def install_modules(test = False, tmpdir = "", dep_return = "", testfile = "testjbutils.py", nose = False, nose_coverage_html = "/tmp/pythonUnitCoverage"):
+def install_modules(test = False, tmpdir = "", dep_return = "", nose = False, nose_coverage_html = "/tmp/pythonUnitCoverage"):
     """
     installs cpf python modules into virtualenv
     runs unit tests
@@ -128,10 +128,10 @@ def install_modules(test = False, tmpdir = "", dep_return = "", testfile = "test
     if not ret == 0:
         return ret 
     else: 
-        ret = run_test(test = test, tmpdir = tmpdir, dep_return = dep_return, testfile = testfile, nose = nose, nose_coverage_html = nose_coverage_html)
+        ret = run_test(test = test, tmpdir = tmpdir, dep_return = dep_return, nose = nose, nose_coverage_html = nose_coverage_html)
     return ret
 
-def run_test(test = False, tmpdir = "", dep_return = "", testfile = "testjbutils.py", nose = False, nose_coverage_html = "/tmp/pythonUnitCoverage"):
+def run_test(test = False, tmpdir = "", dep_return = "", nose = False, nose_coverage_html = "/tmp/pythonUnitCoverage"):
     ret = 0
     #the location of the python module
     current_dir = os.path.abspath( os.path.curdir )
@@ -143,10 +143,9 @@ def run_test(test = False, tmpdir = "", dep_return = "", testfile = "testjbutils
         targetDir = "bin"
     
 
-    #testfilepy = os.path.abspath( os.path.join(module, "tests", testfile) )
     testfilepy = os.path.abspath( os.path.join(module, "tests") )
     if not os.path.exists(testfilepy):
-        log("Error: test file (%s) does not exist" %(testfilepy))
+        log("Error: tests dir (%s) does not exist" %(testfilepy))
         return 1
 
     
@@ -263,7 +262,7 @@ def main():
         #install dependancies and return deps that could not be installed
         dep_return = install_deps(tmpdir = tmpdir)
         #installs the python modules and runs the unit tests
-        ret = ret + install_modules(tmpdir = tmpdir, dep_return = dep_return, testfile = "testjbutils.py", nose = True)
+        ret = ret + install_modules(tmpdir = tmpdir, dep_return = dep_return, nose = True)
         #clear out the temporary virtualenv
         log("\n\ncleaning up by removing dir (%s)\n\n" %(tmpdir) )
         subprocess.call(shlex.split("rm -rf %s" %(tmpdir)))
