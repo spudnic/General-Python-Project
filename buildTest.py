@@ -8,6 +8,7 @@
 #python internal
 import unittest
 import subprocess
+import sys
 
 #package we are testing
 import build
@@ -30,8 +31,11 @@ class testClassAttributes(unittest.TestCase):
         '''
         Test main with no arguments
         '''
+        old_args = sys.argv
+        sys.argv = ['']
         build.main()
-    
+        sys.argv = old_args
+
     def test_install_modules(self):
         """
         Trying to install internal python modules
