@@ -40,6 +40,8 @@ def main():
         
     if test:
         cmd_noreturn("ls -lart")  
+    
+    cmd_noreturn("ls -lart")  
   
     
 

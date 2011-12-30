@@ -90,7 +90,7 @@ def install_modules(test = False, tmpdir = "", dep_return = "", testfile = "test
     """
     ret = 0
     current_dir = os.path.abspath( os.path.curdir )
-    
+    module = os.path.abspath( os.path.join(current_dir, "utils") )
     targetDir = ""
     if sys.platform.startswith('win32'):
         targetDir = "Scripts"
@@ -200,18 +200,29 @@ def main():
     """
     ret = 0
     runpythonunit = False
-    bHelp = 'unit test python utils module'
+    runpythonunitfast = False
+    runpythonunitnonetwork = False
+    bHelp = 'Full test'
+    fHelp = 'Full tests, less network connection'
+    nHelp = 'Full tests, no network connection'
 
     phpunit_args = ""
     #builds up command line arguments
     parser = argparse.ArgumentParser(description='Command line options')
-    parser.add_argument('--unit', '-b', dest='pythonUnit', action = 'store_true', help=bHelp)
+    parser.add_argument('--unit', '-b', dest='u', action = 'store_true', help=bHelp)
+    parser.add_argument('--unit-fast', '-f', dest='f', action = 'store_true', help=fHelp)
+    parser.add_argument('--unit-no-network', '-n', dest='n', action = 'store_true', help=nHelp)
     
     #parse command line options
     args = parser.parse_args()
-    if args.pythonUnit:
+    if args.u:
         runpythonunit = True
-    else:
+    if args.f:
+        runpythonunitfast = True
+    if args.n: 
+        runpythonunitnonetwork = True
+    
+    if len(sys.argv) < 2:
         parser.print_help()
     
     if runpythonunit == True:
