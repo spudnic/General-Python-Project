@@ -210,6 +210,9 @@ def remove_module(tmpdir = "", module = ""):
     current_dir = os.path.abspath( os.path.curdir )
     targetDir = getTargetDir()
     remove_cmd = os.path.join(tmpdir, targetDir, "pip")
+    if not os.path.exists(remove_cmd):
+        log("Error: Was not able to find pip module. Please install or activate a virtualenv and try again")
+        return 1
     remove_cmd += " uninstall %s" %(module)
     log("\n\n%s\n\n" %(remove_cmd) )
     ret = subprocess.call(remove_cmd.split(' ') )
