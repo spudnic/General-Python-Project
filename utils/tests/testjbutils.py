@@ -38,17 +38,16 @@ class testClassAttributes(unittest.TestCase):
         jbutils.main()
         sys.argv = old_args
     
-    def test_commandline(self):
+    def test_printhelp(self):
         '''
-        run via the command line
+        print the help
         '''
-        pass
-        """ this causes errors when run from build.py
-        if sys.platform.startswith('win32'):
-            subprocess.call('jbutilsrun.bat')
-        else:
-            subprocess.call('jbutilsrun')
-        """
+        import jbutils
+        old_args = sys.argv
+        sys.argv = ['jbutilsrun']
+        jbutils.main()
+        sys.argv = old_args
+
     def tearDown(self):
         """
         cleanup 

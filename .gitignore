@@ -1,0 +1,7 @@
+utils/.coverage
+utils/nosetests.xml
+utils/build
+.idea/*
+*.pyc
+*/*.pyc
+*/*/*.pyc

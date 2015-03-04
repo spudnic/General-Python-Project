@@ -89,8 +89,7 @@ def getTargetDir():
 
 def install_modules(test = False, tmpdir = "", dep_return = "", nose = False, nose_coverage_html = "/tmp/pythonUnitCoverage"):
     """
-    installs cpf python modules into virtualenv
-    runs unit tests
+    installs python modules into virtualenv
     """
     ret = 0
     current_dir = os.path.abspath( os.path.curdir )
@@ -98,31 +97,17 @@ def install_modules(test = False, tmpdir = "", dep_return = "", nose = False, no
     targetDir = getTargetDir()
     
     cmd = os.path.join(tmpdir, targetDir, "python")
-    bundle_cmd = os.path.join(tmpdir, targetDir, "pip")
-    
-    #make the bundle
-    bundle_cmd = bundle_cmd + " bundle jbutils.pybundle ."
-    if test:
-        log("\n\n %s \n\n" %(bundle_cmd) )
-    else:
-        os.chdir(module)
-        try:
-            ret = subprocess.call( bundle_cmd.split( " " ) )
-        except:
-            log("Error: Was not able to pip bundle python module")
-        os.chdir(current_dir)
-    
-    #install the bundle
-    install_cmd = os.path.join(tmpdir, targetDir, "pip")
-    install_cmd = install_cmd + " install jbutils.pybundle --upgrade"
+
+    #install the module into the virtualenv
+    install_cmd = cmd + " setup.py install"
     if test:
         log("\n\n %s \n\n" %(install_cmd) )
     else:
         os.chdir(module)
         try:
-            ret = subprocess.call( install_cmd.split( " " ) )
+            ret = subprocess.call(install_cmd.split(" "))
         except:
-            log("Error: Was not able to pip install python module")
+            log("Error: Was not able to python setup.py install %s" %(module))
         os.chdir(current_dir)
 
     if not ret == 0:
