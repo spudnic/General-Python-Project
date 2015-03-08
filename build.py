@@ -35,10 +35,15 @@ def checkvirtualenv():
     try:
         import virtualenv
     except ImportError:
-        log("Warning: virtualenv python module not found, installing with pip")
+        log("Warning: virtualenv python module not found, trying with pip")
+        try:
+            import pip
+        except:
+            log("Warning: pip python module not found, Not sure what to do now.")
+            exit(1)
         cmd = "pip install virtualenv"
         subprocess.call( cmd.split( " " ) )
-        
+
 def createvirtualenv():
     """
     This creates a virtualenv in a temporary location
