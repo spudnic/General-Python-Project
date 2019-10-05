@@ -26,7 +26,7 @@ class testClassAttributes(unittest.TestCase):
         try:
             import jbutils
         except:
-            print "Error: not able to import jbutils make sure that the module in installed correctly"
+            print("Error: not able to import jbutils make sure that the module in installed correctly")
 
     def test_main(self):
         '''
