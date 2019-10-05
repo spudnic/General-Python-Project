@@ -1,0 +1,10 @@
+language: python
+
+services:
+  - docker
+
+before_install:
+- docker pull jfloff/alpine-python
+
+script:
+  - docker build .
