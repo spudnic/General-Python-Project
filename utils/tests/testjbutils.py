@@ -48,6 +48,13 @@ class testClassAttributes(unittest.TestCase):
         jbutils.main()
         sys.argv = old_args
 
+    def test_checkk8(self):
+        '''
+        run some basic kubectl
+        '''
+        import jbutils
+        jbutils.checkk8()
+
     def tearDown(self):
         """
         cleanup 

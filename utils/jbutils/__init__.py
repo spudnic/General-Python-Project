@@ -16,6 +16,9 @@ import time
 def cmd_noreturn(cmd = ""):
     p = subprocess.Popen(cmd.split(" "), stdout = subprocess.PIPE, stderr = subprocess.PIPE)
 
+def checkk8():
+    cmd_noreturn("/usr/local/bin/kubectl get svc")
+
 def main():
     test = False
     aHelp = "Dump the environment"
