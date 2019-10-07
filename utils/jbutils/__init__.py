@@ -19,8 +19,20 @@ def cmd_noreturn(cmd = "", test = False):
     else:
         p = subprocess.Popen(cmd.split(" "), stdout = subprocess.PIPE, stderr = subprocess.PIPE)
 
-def checkk8():
+def checkk8(test = False):
     cmd_noreturn("/usr/local/bin/kubectl get svc")
+
+def dockerbuild(path = 'Dockerfilee', containername = "app:1", test = False):
+    '''
+    Check for the existence of a Dockerfile
+    build it
+    :return:
+    '''
+    if os.path.exists(path):
+        cmd = 'docker build -f ',path,' ', containername, ';'
+        cmd_noreturn(cmd, test)
+    else:
+        print('Error: Dockerfile not found at (', path, ')')
 
 def main():
     test = False
@@ -40,7 +52,10 @@ def main():
         cmd_noreturn("ls -lart")  
     
     if options.b:
-        checkk8()
+        checkk8(test=test)
+
+    if options.c:
+        dockerbuild(test=test)
   
     
 

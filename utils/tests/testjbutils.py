@@ -34,7 +34,7 @@ class testClassAttributes(unittest.TestCase):
         '''
         import jbutils
         old_args = sys.argv
-        sys.argv = ['jbutilsrun','--test-env']
+        sys.argv = ['jbutilsrun','--test-env', '-b','-c']
         jbutils.main()
         sys.argv = old_args
     
@@ -54,6 +54,13 @@ class testClassAttributes(unittest.TestCase):
         '''
         import jbutils
         jbutils.checkk8()
+
+    def test_dockerbuild(self):
+        '''
+        try to build the container
+        '''
+        import jbutils
+        jbutils.dockerbuild(test=True)
 
     def tearDown(self):
         """
