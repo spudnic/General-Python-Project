@@ -12,25 +12,33 @@ import time
 
 #3rd party python specific
 
- 
+def cmd_return(cmd = "", test = False):
+    if test:
+        print('In Test Mode: command(', cmd, ')')
+    else:
+        print('About to run (' + cmd + ')')
+        p = subprocess.call(cmd.split(" ") )
+        return p
+
 def cmd_noreturn(cmd = "", test = False):
     if test:
         print('In Test Mode: command(', cmd, ')')
     else:
-        p = subprocess.Popen(cmd.split(" "), stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+        print('About to run (' + cmd + ')')
+        subprocess.Popen(cmd.split(" "), stdout = subprocess.PIPE, stderr = subprocess.PIPE)
 
 def checkk8(test = False):
-    cmd_noreturn("/usr/local/bin/kubectl get svc")
+    cmd_return("/usr/local/bin/kubectl get svc")
 
-def dockerbuild(path = 'Dockerfilee', containername = "app:1", test = False):
+def dockerbuild(path = 'Dockerfile', containername = "app:1", test = False):
     '''
     Check for the existence of a Dockerfile
     build it
     :return:
     '''
     if os.path.exists(path):
-        cmd = 'docker build -f ',path,' ', containername, ';'
-        cmd_noreturn(cmd, test)
+        cmd = 'docker build -f ' + path + ' -t ' + containername + '.'
+        cmd_return(cmd, test)
     else:
         print('Error: Dockerfile not found at (', path, ')')
 
@@ -49,7 +57,6 @@ def main():
         
     if options.test:
         test = True
-        cmd_noreturn("ls -lart")  
     
     if options.b:
         checkk8(test=test)

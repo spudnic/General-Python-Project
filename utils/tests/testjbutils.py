@@ -60,7 +60,15 @@ class testClassAttributes(unittest.TestCase):
         try to build the container
         '''
         import jbutils
-        jbutils.dockerbuild(test=True)
+        jbutils.dockerbuild(path='Dockerfile', test=True)
+
+        # we expect this to return error
+        try:
+            jbutils.dockerbuild(path='badfile')
+        except:
+            pass
+
+
 
     def tearDown(self):
         """
