@@ -32,10 +32,9 @@ class PyTest(Command):
         pass
     def run(self):
         import sys,subprocess
-        errno = subprocess.call([sys.executable, os.path.join('tests','testjbutils.py')])
+        cmd = 'nosetests -v --cover-html --cover-package=jbutils --cover-tests --with-coverage --cover-erase --with-xunit --exe tests/'
+        errno = subprocess.call(cmd.split(' '))
         raise SystemExit(errno)
-
-
 
 setup_args = {
     'name': name,

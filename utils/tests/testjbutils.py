@@ -17,7 +17,8 @@ import sys
 
 class testClassAttributes(unittest.TestCase):
     def setUp(self):
-        pass
+        # create empty Dockerfile
+        os.system('touch Dockerfile')
 
     def test_import(self):
         '''
@@ -34,10 +35,20 @@ class testClassAttributes(unittest.TestCase):
         '''
         import jbutils
         old_args = sys.argv
-        sys.argv = ['jbutilsrun','--test-env', '-b','-c']
+        sys.argv = ['jbutilsrun','--test-env', '-b', '-c', '-d']
         jbutils.main()
         sys.argv = old_args
-    
+
+    def test_cmd_return(self):
+        import jbutils
+        jbutils.cmd_return(test=True)
+        jbutils.cmd_return(cmd="ls -lart")
+
+    def test_cmd_noreturn(self):
+        import jbutils
+        jbutils.cmd_noreturn(test=True)
+        jbutils.cmd_noreturn(cmd="ls -lart")
+
     def test_printhelp(self):
         '''
         print the help
@@ -53,7 +64,7 @@ class testClassAttributes(unittest.TestCase):
         run some basic kubectl
         '''
         import jbutils
-        jbutils.checkk8()
+        jbutils.checkk8(test=True)
 
     def test_dockerbuild(self):
         '''
@@ -68,13 +79,19 @@ class testClassAttributes(unittest.TestCase):
         except:
             pass
 
+    def test_dockerrun(self):
+        '''
+        try to run the container
+        '''
+        import jbutils
+        jbutils.dockerrun(containername='app:1', test=True)
 
 
     def tearDown(self):
         """
         cleanup 
         """
-        pass
+        os.system('rm Dockerfile')
     
 if __name__ == '__main__':
     unittest.main()
