@@ -21,7 +21,7 @@ scripts = [os.path.join( "bin","%srun"     %(name) ), \
            os.path.join( "bin","%srun.bat" %(name) )]
 
 long_description="""
-This modules is a sample of test driven development.
+This modules try's to set a standard way to build contianers and interact with kubectl. By default it assumes you are running minikube but it can also be used to deploy to a k8 cluster. 
 """
 
 class PyTest(Command):
@@ -32,21 +32,19 @@ class PyTest(Command):
         pass
     def run(self):
         import sys,subprocess
-        errno = subprocess.call([sys.executable, os.path.join('tests','testjbutils.py')])
+        cmd = 'nosetests -v --cover-html --cover-package=jbutils --cover-tests --with-coverage --cover-erase --with-xunit --exe tests/'
+        errno = subprocess.call(cmd.split(' '))
         raise SystemExit(errno)
-
-
 
 setup_args = {
     'name': name,
     'version': "1.0.0",
-    'description': "utils Python Module",
+    'description': "kubectl and container launch in a standard way",
     'long_description': long_description,
     'author': "Brody",
     'author_email': "info@jbbs-inc.com",
     'url': "http://jbbs-inc.com",
     'license': "GNU GPL",
-    # does this classifiers= mean that this can't be installed on 2.2/2.3?
     'classifiers': [
         'Development Status :: 4 - Beta/Stable',
         'Environment :: Local Application OSX Linux Windows',

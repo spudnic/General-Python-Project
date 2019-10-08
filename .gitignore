@@ -1,6 +1,7 @@
 utils/.coverage
 utils/nosetests.xml
 utils/build
+utils/cover
 .idea/*
 *.pyc
 */*.pyc
