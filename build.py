@@ -1,7 +1,9 @@
-'''
-entry point for deployment packaging, and automated testing
-author info@jbbs-inc.com
-'''
+#!/usr/bin/env python
+
+# --------------------------
+# @author info@jbbs-inc.com
+# entry point for deployment packaging, and automated testing
+# --------------------------
 
 #python specific
 import tempfile
