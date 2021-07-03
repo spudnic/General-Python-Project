@@ -441,6 +441,7 @@ def main():
     ret = 0
     runpythonunit = False
     runpythonunitfast = False
+    rundocker = False
     des = "Command Line Options"
     phpunit_args = ""
     #builds up command line arguments
@@ -451,6 +452,8 @@ def main():
     args = parser.parse_args()
 
     #parse command line options
+    if args.d:
+        rundocker = True
     if args.u:
         runpythonunit = True
     if args.f:
@@ -458,6 +461,9 @@ def main():
 
     if len(sys.argv) < 2:
         parser.print_help()
+
+    if rundocker == True:
+        subprocess.call(shlex.split("docker build . "))
 
     if runpythonunitfast == True:
         #get the location of current virtualenv
