@@ -3,9 +3,20 @@ This project is an example python module developed with test driven development.
 
 [![Build Status](https://travis-ci.org/spudnic/General-Python-Project.svg?branch=master)](https://travis-ci.org/spudnic/General-Python-Project)
 
-## Docker based testing
-* Just build the dockerfile
+## What is does
+* look at the help
 ```
-docker build .
+$ python3 build.py 
+usage: build.py [-h] [--unit] [--unit-fast] [--docker-build]
+
+Command Line Options
+
+optional arguments:
+  -h, --help          show this help message and exit
+  --unit, -b          Full tests, run locally
+  --unit-fast, -f     Full tests, run locally, no network connection
+  --docker-build, -d  build with in a docker container
+brody@brody-Lenovo-IdeaPad-FLEX-14IWL:~/workspace/General-Python-Project$ 
+
 ```
 
