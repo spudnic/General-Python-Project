@@ -38,7 +38,7 @@ class PyTest(Command):
 
 setup_args = {
     'name': name,
-    'version': "1.0.0",
+    'version': "1.0.1",
     'description': "kubectl and container launch in a standard way",
     'long_description': long_description,
     'author': "Brody",
