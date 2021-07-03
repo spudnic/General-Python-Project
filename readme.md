@@ -1,6 +1,6 @@
 # General Python module
 This project is an example python module developed with test driven development. We strive to keep 80% code coverage as we add more to the module.
-[Build Status main]( [![Build Status main](https://github.com/spudnic/General-Python-Project/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/spudnic/General-Python-Project/actions/workflows/main.yml)
+[Build Status main]([![Build Status main](https://github.com/spudnic/General-Python-Project/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/spudnic/General-Python-Project/actions/workflows/main.yml)
 
 ## What is does
 * look at the help
