@@ -1,7 +1,6 @@
 # General Python module
 This project is an example python module developed with test driven development. We strive to keep 80% code coverage as we add more to the module.
-
-[![Build Status](https://travis-ci.com/spudnic/General-Python-Project.svg?branch=main)](https://travis-ci.com/spudnic/General-Python-Project)
+![Build Status main](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?branch=main)
 
 ## What is does
 * look at the help
