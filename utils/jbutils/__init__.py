@@ -4,7 +4,6 @@ author info@jbbs-inc.com
 '''
 
 #python specific
-import pdb
 import os
 import sys
 import subprocess
