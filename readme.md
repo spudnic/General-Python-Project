@@ -43,6 +43,9 @@ bash:    run the container that has python installed
 help:    Show this help.
 
 % make bash
+docker build -t dev-python:0.0.1 .
+[+] Building 2.2s (13/13) FINISHED  
+...                                                                                                                                                                            
 echo /Users/brody/workspace/github.com/spudnic/General-Python-Project
 /Users/brody/workspace/github.com/spudnic/General-Python-Project
 docker run -it --volume /Users/brody/workspace/github.com/spudnic/General-Python-Project:/opt/git dev-python:0.0.1  /bin/bash

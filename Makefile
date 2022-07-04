@@ -5,7 +5,7 @@ CWD = $(shell pwd)
 build:	## builds the docker file
 	docker build -t dev-python:$(VERSION) .
 
-bash:	## run the container that has python installed
+bash: build	## run the container that has python installed
 	echo $(CWD)
 	docker run -it --volume $(CWD):/opt/git dev-python:$(VERSION)  /bin/bash
 
