@@ -30,7 +30,13 @@ jobs:
         run: docker info
 
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Run make commands
+        run: |
+          make help
+          make build
+
+      # Runs a set of commands using the runners shell
+      - name: Run pure python version
         run: |
           python3 build.py
           python3 build.py -d
